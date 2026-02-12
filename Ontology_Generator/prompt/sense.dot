@@ -1,0 +1,7 @@
+digraph "architecture design case ontology"{
+"design case" -> "building" [label="top sense"]
+"design case" -> "event" [label="top sense"]
+"design case" -> "issue" [label="top sense"]
+"design case" -> "participant" [label="top sense"]
+"design case" -> "site" [label="top sense"]
+}
