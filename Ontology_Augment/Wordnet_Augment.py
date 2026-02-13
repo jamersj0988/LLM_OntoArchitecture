@@ -1,28 +1,16 @@
-from langchain_core.vectorstores import InMemoryVectorStore
-from langchain_openai import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import TextLoader
-from langchain_core.documents import Document
 from langchain.agents import create_agent
-from langchain_community.vectorstores import FAISS
-from langgraph.graph import START, END, MessagesState, StateGraph
-
-from langchain_core.messages import HumanMessage,SystemMessage
-from langchain_core.prompts import ChatPromptTemplate
-from pydantic import Field,BaseModel
-from datetime import datetime
-from typing import Annotated
-
-
-
+from langchain_google_genai import ChatGoogleGenerativeAI
+from prompt.Wordnet_prompt import Wordnet_prompt,Wordnet_system
 from langchain.tools import tool
 from nltk.corpus import wordnet as wn
-from pydantic import BaseModel,Field
+from langchain_core.prompts import ChatPromptTemplate
+from typing import List
 
 wn.ensure_loaded() 
 
-@tool
-def Wordnet_Search(inputs: list) -> str:
+# Wordnet 查詢工具
+@tool 
+def Wordnet_Search(inputs: List[str]) -> str:
     """可以獲得 inputs 中所有單詞的 Synonyms 以及其 Meronyms
         查詢後會得到回覆:
         Vocabulary --> Vocabulary defintion 
@@ -82,3 +70,22 @@ def Wordnet_Search(inputs: list) -> str:
 
     return "\n".join(results)
 
+
+seed = """
+digraph building ontology{
+"building" -> "wall" [label="meronymy"]
+}
+"""
+
+model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
+Wordnet_model = create_agent(model,tools = [Wordnet_Search], system_prompt = Wordnet_system)
+prompt_template = ChatPromptTemplate.from_messages([
+        ("human", Wordnet_prompt)
+    ])
+
+
+for event in Wordnet_model.stream(
+    {"messages": prompt_template.format_messages(Seed_Ontology = seed) },
+    stream_mode="values",
+):
+    event["messages"][-1].pretty_print()
