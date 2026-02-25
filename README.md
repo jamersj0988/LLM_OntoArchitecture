@@ -11,6 +11,15 @@
 
 ---
 
+## 目錄
+- [項目簡介](#-項目簡介)
+- [流程(一) 01_Ontology_ Generator](#流程一-01_ontology_-generator)
+- [流程（二）02_Ontology_Augment](#流程二02_ontology_augment)
+- [流程（三）03_Ontology_Evaluate](#流程三03_ontology_evaluate)
+- [快速開始](#-快速開始)
+- [工作流程](#-工作流程)
+- [引用](#-引用)
+
 ## 🎯 項目簡介
 
 這是一個挖掘「LLM建築案例知識」的本體生成框架
@@ -30,7 +39,7 @@
 
 ### 流程(一) 01_Ontology_ Generator
 
-#### 簡介：
+### **簡介：**
 - 輸入與輸出本體皆以DOT Format表示，減少占用上下文的空間。
 - 每一次運行皆固定產生10個新的Ontology concepts。
 - Ontology 的語意關係表達包含:
@@ -40,7 +49,7 @@
     - 資料屬性(data attribute)
 - 每一次運行 Generator 皆會經由 Refiner 由另一個LLM 檢查結果以及進行改進。
 
-#### 過程概述：
+### **過程概述：**
 ```
 01_種子本體 (Seed Ontology)
         │   ┌───────────────────┐
@@ -62,7 +71,7 @@
      最終本體  ← 使用者決定
 ```
 
-#### 基礎資料準備：
+### **基礎資料準備：**
 - 流程(一)需求一組 DOT 格式之種子本體(Seed Ontology)作為輸入，通常為愈擴展之「目標本體」；首輪生成的本體結果則作為下一輪運行的種子本體(Seed Ontology)，以此循環迭代。
 - 首次運行則需「預先定義好的上層本體」，來表示案例知識應涵蓋的基礎內容，我們提供一個預設上層本體，作為首次運行範例。
 
@@ -80,7 +89,7 @@ digraph "architecture design case ontology"{
 
 ### 流程（二）02_Ontology_Augment
 
-#### 簡介：
+### **簡介：**
 - LLM以既存知識庫增強建築(Building)子本體，豐富流程(一)本體中的概念以及語意。
 - 本項目使用知識庫包含:
     - IFC4.3.x：來源為buildingSMART IFC4.3.X-development，從 Templates 中定義的實體以及關係範式生成增強子本體。
@@ -89,7 +98,7 @@ digraph "architecture design case ontology"{
     - IFC方法基礎為RAG-Base，透過外部知識embedding進行結果生成。 
     - WordNet方法為Tool Calling-Base，將「WordNet查詢」作為LLM可用工具，執行結果生成。
 
-#### 過程概述：
+### **過程概述：**
 ```
 01_流程(一)生成之最終本體
         │   ┌──────────────────────────────────┐
@@ -138,7 +147,7 @@ digraph "architecture design case ontology"{
 02.1.3_最終建築(Building)子本體  ← 使用者決定
 ```
 
-####　基礎資料準備：
+### **基礎資料準備：**
 
 IFC:
 
@@ -150,7 +159,7 @@ WordNet:
 
 衡量本體的質量和有效性。
 
-#### 簡介：
+### **簡介：**
 - 以「領域覆蓋率(Domain Coverage)」以及「本體相關性(Ontology Relevance)」回頭檢視LLM生成案例本體結果。
 - 需要預先蒐集好之案例作為語料庫(Corpus)來源。
 - 流程需要三組概念實體集合進行計算：
@@ -158,7 +167,7 @@ WordNet:
     - Ontology Concepts(本體概念)：概念來源為最終本體
     - Shared Concepts(共享概念)：概念來源為Ontology Concepts與Domain Concepts進行語意相似度計算之結果，若分數高於0.75則該Domain Concept視為Shared Concept。
 
-#### 過程概述：
+### **過程概述：**
 Domain Concepts 與 Shared Concepts 建構過程
 ```
 01_案例語料庫
@@ -210,7 +219,7 @@ $env:OPENAI_API_KEY = "your-openai-api-key"
 
 ### 3. 運行範例
 
-#### 生成本體
+### **生成本體**
 ```python
 from Ontology_Generator.Generator import load_file
 from langgraph.graph import StateGraph
@@ -222,7 +231,7 @@ seed_ontology = load_file("path/to/seed.dot")
 # 詳見 Ontology_Generator/Generator.py
 ```
 
-#### 使用 IFC 增強
+### **使用 IFC 增強**
 ```python
 from Ontology_Augment.IFC_Augment import retrieve_context
 
@@ -230,7 +239,7 @@ from Ontology_Augment.IFC_Augment import retrieve_context
 context = retrieve_context("建築設計")
 ```
 
-#### 評估本體
+### **評估本體**
 ```python
 from Ontology_Evaluate.evaluate import shared_concepts
 
