@@ -4,21 +4,20 @@
 # LLM 建築本體架構系統 🏗️
 
 </div>
+
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
 [![許可証: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-
 
 ---
 
 ## ⚀ 目錄
 - [項目簡介](#-項目簡介)
-- [流程(一) 01_Ontology_ Generator](#流程一-01_ontology_-generator)
-- [流程（二）02_Ontology_Augment](#流程二02_ontology_augment)
-- [流程（三）03_Ontology_Evaluate](#流程三03_ontology_evaluate)
-- [快速開始](#-快速開始)
-- [工作流程](#-工作流程)
-- [引用](#-引用)
+- [流程介紹](#-流程介紹)
+  - [流程(一) Ontology_Generator](#流程一-ontology_generator)
+  - [流程(二) Ontology_Augment](#流程二-ontology_augment)
+  - [流程(三) Ontology_Evaluate](#流程三-ontology_evaluate)
+- [資料夾結構](#資料夾結構)
+- [使用需求](#-使用需求)
 
 ## ⚁ 項目簡介
 
@@ -161,9 +160,8 @@ WordNet:
 ---
 ### 🚩流程（三）03_Ontology_Evaluate
 
-衡量本體的質量和有效性。
-
 ### **簡介：**
+- 衡量本體的質量和有效性。
 - 以「領域覆蓋率(Domain Coverage)」以及「本體相關性(Ontology Relevance)」回頭檢視LLM生成案例本體結果。
 - 需要預先蒐集好之案例作為語料庫(Corpus)來源。
 - 流程需要三組概念實體集合進行計算：
@@ -202,7 +200,52 @@ Domain Concepts 與 Shared Concepts 建構過程
 ```
 ---
 
-## ⚃ 快速開始
+## ⚃資料夾結構
+
+```
+└── LLM_ONTOARCHITECTURE                <- root directory of the repository
+    │                    
+    ├── 01_Ontology_Generator              
+    │   ├── Generator.py                <- 本體生成模塊 + 本體監督模塊    
+    │   └── prompt
+    │       ├── generator_prompt.py     <- 本體生成模塊prompt
+    │       ├── refiner_prompt.py       <- 本體監督模塊prompt
+    │       └── sense.dot               <- 預設初始種子本體(Seed Ontology)
+    │
+    ├── 02_Ontology_Augment
+    │   ├── CreatVector.py              <- IFC 知識庫向量嵌入 
+    │   ├── IFC_Augment.py              <- IFC增強子本體生成
+    │   ├── Wordnet_Augment.py          <- Wordnet增強子本體生成
+    │   ├── Building_Knowledge          
+    │   │   ├── IFC_concept.txt         <- IFC Template 中的所有實體與關係範式 
+    │   │   └── IFC_Schema.txt           
+    │   └── prompt                      
+    │       ├── IFC_prompt.py           <- IFC增強子本體生成prompt
+    │       └── Wordnet_prompt.py       <- Wordnet增強子本體生成prompt
+    │
+    └── 03_Ontology_Evaluate
+            ├── evaluate.py             <- 計算Domain Coverage & Ontology Relevance
+            ├── Corpus                  <- 本項目實驗所使用案例語料庫之原始資料
+            │   ├── Archdaily.rar
+            │   └── GreatBuildings.rar
+            ├── DomainConcepts          
+            │   └── embedding.py        <- 對LLM GraphTransformer之擷取後之json直接抽取「概念實體」並嵌入向量
+            └── Ontology                <- 本項目LLM生成案例本體結果之範例
+                    ├── LLM10.dot
+                    ├── LLM10+IFC.dot
+                    ├── LLM10+Wordnet.dot
+                    ├── LLM20.dot
+                    ├── LLM20+Wordnet.dot
+                    └── embedding.py    <- 直接對DOT Format中的本體概念進行向量嵌入
+    ├── FLOW.jpg
+    ├── README.md
+    └── requirements.txt
+
+```
+
+---
+
+## ⚄ 使用需求
 
 ### 1. 環境要求
 
@@ -221,45 +264,5 @@ $env:GOOGLE_API_KEY = "your-google-api-key"
 $env:OPENAI_API_KEY = "your-openai-api-key"
 ```
 
-### 3. 運行範例
-
-### **生成本體**
-```python
-from Ontology_Generator.Generator import load_file
-from langgraph.graph import StateGraph
-
-# 讀取種子本體
-seed_ontology = load_file("path/to/seed.dot")
-
-# 使用 LLM 生成新本體
-# 詳見 Ontology_Generator/Generator.py
-```
-
-### **使用 IFC 增強**
-```python
-from Ontology_Augment.IFC_Augment import retrieve_context
-
-# 檢索相關 IFC 概念
-context = retrieve_context("建築設計")
-```
-
-### **評估本體**
-```python
-from Ontology_Evaluate.evaluate import shared_concepts
-
-# 比較本體與領域語料庫
-onto_count, corpus_count, shared = shared_concepts(
-    ontology="Ontology_Evaluate/Ontology/embedding.py",
-    corpus="Ontology_Evaluate/DomainConcepts/embedding.py"
-)
-
-print(f"覆蓋率: {shared/corpus_count*100:.1f}%")
-```
-
 
 ---
-
-## 📝 引用
-
-
-

@@ -5,6 +5,7 @@ from prompt.generator_prompt import system_gen,user_gen
 from prompt.refiner_prompt import system_refine,user_refine
 from langchain_core.prompts import ChatPromptTemplate
 import re
+from pathlib import Path
 
 class Overallstate(MessagesState):
     Ontology: str 
@@ -33,7 +34,7 @@ default_seed = """
         }
         """
 
-def load_file(file=None):
+def load_dot(file=None):
     """讀取 DOT 檔案並轉換成字串"""
 
     # ✅ 先處理「沒給檔名」這個合法情況
@@ -55,24 +56,27 @@ def save_ontology(state: Overallstate):
     ontology = state.get("Ontology", "")
     file = state.get("file", "")
 
-    default_prefix = "ontology_"
-    default_suffix = ".dot"
+    path = Path(file)
 
-    match = re.match(r"(ontology_)(\d+)(\.dot)", file)
+    filename = path.name        # 只抓檔名
+    directory = path.parent     # 抓資料夾
+
+    match = re.match(r"(ontology_)(\d+)(\.dot)", filename)
 
     if match:
         prefix, number, suffix = match.groups()
         new_number = int(number) + 1
         new_filename = f"{prefix}{new_number}{suffix}"
     else:
-        # 不合法時的備案命名
-        new_filename = f"{default_prefix}1{default_suffix}"
+        new_filename = "ontology_1.dot"
 
-    with open(new_filename, "w", encoding="utf-8") as f:
+    new_path = directory / new_filename
+
+    with open(new_path, "w", encoding="utf-8") as f:
         f.write(ontology)
 
     return {
-        "file": new_filename
+        "file": str(new_path)
     }
 
 
@@ -129,23 +133,26 @@ def Refiner (state: Overallstate):
 
 # build graph
 
-builder =StateGraph(Overallstate)
+def main (inputpath):
 
-builder.add_node("generator", Generator)
-builder.add_node("refiner",Refiner)
-builder.add_node("save",save_ontology)
+    builder =StateGraph(Overallstate)
+    builder.add_node("generator", Generator)
+    builder.add_node("refiner",Refiner)
+    builder.add_node("save",save_ontology)
 
-builder.add_edge(START,"generator")
-builder.add_edge("generator","refiner")
-builder.add_edge("refiner","save")
-builder.add_edge("save",END)
+    builder.add_edge(START,"generator")
+    builder.add_edge("generator","refiner")
+    builder.add_edge("refiner","save")
+    builder.add_edge("save",END)
 
-graph =builder.compile()
+    graph =builder.compile()
 
+    graph.invoke({"Ontology":load_dot(inputpath),"file":inputpath})
+    # for i in range(11, 21):
+    #     file = f"ontology_{i}.dot"
+    #     seed = load_file(file)
+    #     graph.invoke({"Ontology": seed,"file":file})
 
-
-graph.invoke({"Ontology":load_file(),"file":""})
-# for i in range(11, 21):
-#     file = f"ontology_{i}.dot"
-#     seed = load_file(file)
-#     graph.invoke({"Ontology": seed,"file":file})
+if __name__ == "__main__":
+    input_path = sys.argv[1] if len(sys.argv) > 1 else None
+    main(input_path)
