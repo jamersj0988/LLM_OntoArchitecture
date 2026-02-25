@@ -73,21 +73,6 @@
         ▼
      最終本體  ← 使用者決定
 ```
-
-### **基礎資料準備：**
-- 流程(一)需求一組 DOT 格式之種子本體(Seed Ontology)作為輸入，通常為愈擴展之「目標本體」；首輪生成的本體結果則作為下一輪運行的種子本體(Seed Ontology)，以此循環迭代。
-- 首次運行則需「預先定義好的上層本體」，來表示案例知識應涵蓋的基礎內容，我們提供一個預設上層本體，作為首次運行範例。
-
-首輪預設種子本體:
-```
-digraph "architecture design case ontology"{
-    "design case" -> "building" [label="top sense"]
-    "design case" -> "event" [label="top sense"]
-    "design case" -> "issue" [label="top sense"]
-    "design case" -> "participant" [label="top sense"]
-    "design case" -> "site" [label="top sense"]
-}
-```
 ---
 
 ### 🚩流程（二）02_Ontology_Augment
@@ -149,14 +134,6 @@ digraph "architecture design case ontology"{
         ▼
 02.1.3_最終建築(Building)子本體  ← 使用者決定
 ```
-
-### **基礎資料準備：**
-
-IFC:
-
-WordNet:
-
-
 ---
 ### 🚩流程（三）03_Ontology_Evaluate
 

@@ -109,5 +109,5 @@ def Ontology_Augment (target):
     ):
         event["messages"][-1].pretty_print()
         
-        
+
 Ontology_Augment("IfcRoof")
