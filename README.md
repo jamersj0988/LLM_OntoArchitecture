@@ -1,17 +1,17 @@
-# LLM 建築本體架構系統 🏗️
-
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![許可証: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <div align="center">
 
-**基於大型語言模型的建築設計領域本體自動生成與評估系統**
+# LLM 建築本體架構系統 🏗️
 
 </div>
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![許可証: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 
 ---
 
-## ▂ 目錄
+## ⚀ 目錄
 - [項目簡介](#-項目簡介)
 - [流程(一) 01_Ontology_ Generator](#流程一-01_ontology_-generator)
 - [流程（二）02_Ontology_Augment](#流程二02_ontology_augment)
@@ -20,7 +20,7 @@
 - [工作流程](#-工作流程)
 - [引用](#-引用)
 
-## ▄ 項目簡介
+## ⚁ 項目簡介
 
 這是一個挖掘「LLM建築案例知識」的本體生成框架
 
@@ -37,11 +37,11 @@
 
 ## 
 
-## ▅ 流程介紹
+## ⚂ 流程介紹
 
 ---
 
-### 流程(一) 01_Ontology_ Generator
+### 🚩流程(一) 01_Ontology_ Generator
 
 ### **簡介：**
 - 輸入與輸出本體皆以DOT Format表示，減少占用上下文的空間。
@@ -91,7 +91,7 @@ digraph "architecture design case ontology"{
 ```
 ---
 
-### 流程（二）02_Ontology_Augment
+### 🚩流程（二）02_Ontology_Augment
 
 ### **簡介：**
 - LLM以既存知識庫增強建築(Building)子本體，豐富流程(一)本體中的概念以及語意。
@@ -159,7 +159,7 @@ WordNet:
 
 
 ---
-### 流程（三）03_Ontology_Evaluate
+### 🚩流程（三）03_Ontology_Evaluate
 
 衡量本體的質量和有效性。
 
@@ -202,7 +202,7 @@ Domain Concepts 與 Shared Concepts 建構過程
 ```
 ---
 
-## ▆ 快速開始
+## ⚃ 快速開始
 
 ### 1. 環境要求
 
