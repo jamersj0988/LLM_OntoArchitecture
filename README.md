@@ -13,9 +13,9 @@
 ## ⚀ 目錄
 - [項目簡介](#-項目簡介)
 - [流程介紹](#-流程介紹)
-  - [流程(一) Ontology_Generator](#流程一-ontology_generator)
-  - [流程(二) Ontology_Augment](#流程二-ontology_augment)
-  - [流程(三) Ontology_Evaluate](#流程三-ontology_evaluate)
+  - [流程(一) 01_ntology_Generator](#流程一-01_ontology_generator)
+  - [流程(二) 02_Ontology_Augment](#流程二-02_ontology_augment)
+  - [流程(三) 03_Ontology_Evaluate](#流程三-03_ontology_evaluate)
 - [資料夾結構](#資料夾結構)
 - [使用需求](#-使用需求)
 
