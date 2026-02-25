@@ -77,7 +77,7 @@ def save_ontology(state: Overallstate):
 
 
 # 本體生成模塊
-def generator (state: Overallstate):
+def Generator (state: Overallstate):
     seed = state["Ontology"]
     template = ChatPromptTemplate(
     [
@@ -102,7 +102,7 @@ class RefineOutput(BaseModel):
     Result_reason : str =Field (description= "輸出以下內容 : \nResult: (是\否) 需要修正 \n原因:")
 
 # 本體監督模塊
-def refiner (state: Overallstate):
+def Refiner (state: Overallstate):
     newOntology = state ["Ontology"]
     newConcept = state ["new_concept_list"]
     template = ChatPromptTemplate(
@@ -131,8 +131,8 @@ def refiner (state: Overallstate):
 
 builder =StateGraph(Overallstate)
 
-builder.add_node("generator", generator)
-builder.add_node("refiner",refiner)
+builder.add_node("generator", Generator)
+builder.add_node("refiner",Refiner)
 builder.add_node("save",save_ontology)
 
 builder.add_edge(START,"generator")
